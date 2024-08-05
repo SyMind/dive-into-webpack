@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 
-test('ModuleDecoratorDependency', done => {
+test('HarmonyExportHeaderDependency', done => {
     webpack({
         mode: "development",
         entry: "./index.js",
@@ -16,10 +16,13 @@ test('ModuleDecoratorDependency', done => {
                     compilation.hooks.seal.tap("PLUGIN", () => {
                         const entryDependency = compilation.entries.get("main").dependencies[0];
                         const module = compilation.moduleGraph.getModule(entryDependency);
-                        const moduleDecoratorDependency = module.dependencies[0];
-                        expect(moduleDecoratorDependency.decorator).toBe("__webpack_require__.nmd");
-                    })
-                })
+                        const [harmonyCompatibilityDependency, harmonyExportHeaderDependency] = module.presentationalDependencies;
+                        const HarmonyCompatibilityDependency = require("webpack/lib/dependencies/HarmonyCompatibilityDependency.js");
+                        const HarmonyExportHeaderDependency = require("webpack/lib/dependencies/HarmonyExportHeaderDependency.js");
+                        expect(harmonyCompatibilityDependency).toBeInstanceOf(HarmonyCompatibilityDependency);
+                        expect(harmonyExportHeaderDependency).toBeInstanceOf(HarmonyExportHeaderDependency);
+                    });
+                });
             }
         ]
     }, (err, stats) => {
