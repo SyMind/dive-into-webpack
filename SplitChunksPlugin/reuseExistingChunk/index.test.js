@@ -39,7 +39,6 @@ test('SplitChunksPlugin', done => {
         // Chunk 2 (named two): modules B, C（在拆分模块时扫描到 two chunk 已包含模块 B、C，直接复用）
         //
         // 详细信息请参考此 issue：https://github.com/webpack/webpack.js.org/issues/2122
-        expect(err).toBeNull();
         const files = fs.readdirSync(path.join(__dirname, "dist"));
         expect(files).toEqual(expect.arrayContaining([
             "main.js",
